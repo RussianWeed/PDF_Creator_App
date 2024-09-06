@@ -1,6 +1,5 @@
 package com.devking.pdf_v3;
 
-
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -98,6 +97,3 @@ public class PDFcreator {
         }
     }
 }
-
-
-

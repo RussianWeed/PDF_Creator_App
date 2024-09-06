@@ -26,32 +26,6 @@
 
     </androidx.camera.view.PreviewView>
 
-    <EditText
-        android:id="@+id/pdfNameInput"
-        android:layout_width="383dp"
-        android:layout_height="52dp"
-        android:hint="Enter PDF Name"
-        android:padding="12dp"
-        android:textColor="@android:color/black"
-        android:textColorHint="@android:color/darker_gray"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/createPdfButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/captureButton" />
-
-    <Button
-        android:id="@+id/createPdfButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:padding="12dp"
-        android:text="Create PDF"
-        android:textColor="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/captureButton"
@@ -64,8 +38,24 @@
         android:src="@drawable/baseline_camera_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.751" />
+        app:layout_constraintVertical_bias="0.88" />
+
+    <Button
+        android:id="@+id/viewImagesButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:padding="16dp"
+        android:layout_marginTop="10dp"
+        android:text="View Images and Create PDF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/captureButton"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
