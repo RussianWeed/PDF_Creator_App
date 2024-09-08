@@ -13,7 +13,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
-
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
@@ -29,6 +28,9 @@ public class ImageDisplayActivity extends AppCompatActivity {
     private List<Bitmap> bitmapList = new ArrayList<>();
     private ImagePagerAdapter adapter;
 
+    private Button removePageButton;
+    private Button reorderButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,11 +41,17 @@ public class ImageDisplayActivity extends AppCompatActivity {
         pdfNameEditText = findViewById(R.id.pdf_name);
         viewPager = findViewById(R.id.viewPager);
 
+        removePageButton = findViewById(R.id.remove_btn);
+        reorderButton = findViewById(R.id.reorder_btn);
+
         // Get the image paths passed from MainActivity
         imagePaths = getIntent().getStringArrayListExtra("imagePaths");
 
         createPdfButton.setOnClickListener(v -> createPdf());
         cropButton.setOnClickListener(v -> cropCurrentImage());
+
+        removePageButton.setOnClickListener(v -> removeCurrentPage());
+        reorderButton.setOnClickListener(v -> openReorderActivity());
 
         if (imagePaths != null && !imagePaths.isEmpty()) {
             loadBitmaps();
@@ -54,6 +62,7 @@ public class ImageDisplayActivity extends AppCompatActivity {
     }
 
     private void loadBitmaps() {
+        bitmapList.clear(); // Clear existing list
         for (String path : imagePaths) {
             try {
                 Bitmap bitmap = BitmapFactory.decodeFile(path);
@@ -86,36 +95,59 @@ public class ImageDisplayActivity extends AppCompatActivity {
                 .start(this);
     }
 
+    private void removeCurrentPage() {
+        int currentItem = viewPager.getCurrentItem();
+        if (currentItem >= 0 && currentItem < bitmapList.size()) {
+            bitmapList.remove(currentItem);
+            imagePaths.remove(currentItem);
+            adapter.notifyItemRemoved(currentItem);
+            if (bitmapList.isEmpty()) {
+                Toast.makeText(this, "No more images left", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
+    private void openReorderActivity() {
+        Intent intent = new Intent(this, ReOrderActivity.class);
+        intent.putStringArrayListExtra("imagePaths", imagePaths);  // Pass paths instead of Bitmaps
+        startActivityForResult(intent, 1);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Handle the result of the uCrop activity
         if (requestCode == UCrop.REQUEST_CROP) {
             if (resultCode == RESULT_OK) {
                 Uri resultUri = UCrop.getOutput(data);
                 int currentItem = viewPager.getCurrentItem();
-                try {
-                    Bitmap croppedBitmap = BitmapFactory.decodeFile(resultUri.getPath());
+                if (resultUri != null) {
+                    String newPath = resultUri.getPath();
+                    imagePaths.set(currentItem, newPath); // Update path to cropped image
+                    Bitmap croppedBitmap = BitmapFactory.decodeFile(newPath);
                     if (croppedBitmap != null) {
                         bitmapList.set(currentItem, croppedBitmap);
                         adapter.notifyItemChanged(currentItem);
                     } else {
                         Toast.makeText(this, "Failed to load cropped image", Toast.LENGTH_SHORT).show();
                     }
-                } catch (Exception e) {
-                    Log.e(TAG, "Error decoding cropped image: " + e.getMessage());
-                    Toast.makeText(this, "Error loading cropped image", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Cropping result is null", Toast.LENGTH_SHORT).show();
                 }
             } else if (resultCode == UCrop.RESULT_ERROR) {
                 Throwable cropError = UCrop.getError(data);
                 Toast.makeText(this, "Crop error: " + (cropError != null ? cropError.getMessage() : "Unknown error"), Toast.LENGTH_SHORT).show();
             }
+        } else if (requestCode == 1 && resultCode == RESULT_OK) {
+            ArrayList<String> reorderedImagePaths = data.getStringArrayListExtra("reorderedImagePaths");
+            if (reorderedImagePaths != null) {
+                imagePaths.clear();
+                imagePaths.addAll(reorderedImagePaths);
+                loadBitmaps();  // Reload Bitmaps from new paths
+                adapter.notifyDataSetChanged();
+            }
         }
     }
-
 
     private void createPdf() {
         String pdfName = pdfNameEditText.getText().toString().trim();

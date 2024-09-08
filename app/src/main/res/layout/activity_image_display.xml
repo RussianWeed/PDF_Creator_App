@@ -29,15 +29,43 @@
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="600dp"
+        android:layout_height="545dp"
         android:orientation="horizontal" />
 
-    <Button
-        android:id="@+id/btn_crop"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:text="Crop"
-        android:layout_gravity="center"
-        android:layout_marginTop="8dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:orientation="horizontal">
+
+
+        <Button
+            android:id="@+id/btn_crop"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:text="Crop" />
+
+        <Button
+            android:id="@+id/remove_btn"
+            android:layout_width="100dp"
+            android:layout_height="73dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:text="Remove Page"
+           android:gravity="center"/>
+
+        <Button
+            android:id="@+id/reorder_btn"
+            android:layout_width="100dp"
+            android:layout_height="73dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:text="Reorder Page" />
+
+
+
+    </LinearLayout>
 
 </LinearLayout>
