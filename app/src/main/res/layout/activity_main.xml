@@ -9,53 +9,62 @@
     android:background="@android:color/white"
     tools:context=".MainActivity">
 
-
-    <!-- Create PDF Button -->
+    <!-- Expanded PreviewView for Camera -->
     <androidx.camera.view.PreviewView
         android:id="@+id/previewView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="16dp"
         android:background="@android:color/darker_gray"
-        app:layout_constraintBottom_toTopOf="@+id/captureButton"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        tools:ignore="MissingConstraints" >
-
+        app:layout_constraintVertical_bias="0.0">
     </androidx.camera.view.PreviewView>
 
-
+    <!-- Capture Button (Transparent) inside PreviewView -->
     <ImageView
         android:id="@+id/captureButton"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
+        android:background="@android:color/transparent"
         android:contentDescription="Capture Image"
         android:padding="8dp"
         android:scaleType="centerInside"
         android:src="@drawable/baseline_camera_24"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.88" />
+        android:alpha="20"
+        app:layout_constraintBottom_toBottomOf="@id/previewView"
+        app:layout_constraintEnd_toEndOf="@id/previewView"
+        app:layout_constraintStart_toStartOf="@id/previewView"
+        app:layout_constraintTop_toTopOf="@id/previewView"
+        app:layout_constraintVertical_bias="0.95" />
 
-    <Button
-        android:id="@+id/viewImagesButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:padding="16dp"
-        android:layout_marginTop="10dp"
-        android:text="View Images and Create PDF"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <!-- ImageView to display the last captured image with white border -->
+    <ImageView
+        android:id="@+id/lastImage_btn"
+        android:layout_width="84dp"
+        android:layout_height="86dp"
+        android:background="@drawable/border_white"
+        android:contentDescription="Last Captured Image"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="@+id/captureButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/captureButton"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintStart_toEndOf="@id/captureButton" />
+
+    <!-- TextView to display the number of pictures clicked -->
+    <TextView
+        android:id="@+id/picture_num"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/circle_blue"
+        android:gravity="center"
+        android:padding="4dp"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/lastImage_btn"
+        app:layout_constraintEnd_toEndOf="@+id/lastImage_btn"
+        app:layout_constraintTop_toTopOf="@+id/lastImage_btn"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,70 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp">
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="16dp">
 
-        <EditText
-            android:id="@+id/pdf_name"
-            android:layout_width="match_parent"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/filledTextField"
+            android:layout_width="290dp"
             android:layout_height="wrap_content"
-            android:hint="Enter PDF name"
-            android:layout_weight="@integer/material_motion_duration_short_1"/>
+            android:hint="@string/hint">
 
-        <Button
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/pdf_name"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_create_pdf"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Save" />
-
+            android:layout_marginStart="8dp"
+            android:text="Save"
+            app:iconGravity="textStart" />
     </LinearLayout>
 
+    <!-- ViewPager to display images -->
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="545dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="horizontal" />
 
-
+    <!-- Bottom Layout with buttons for cropping, removing, and reordering -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingTop="16dp">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingTop="16dp"
+            android:background="?attr/colorSurface">
 
-        <Button
-            android:id="@+id/btn_crop"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="8dp"
-            android:text="Crop" />
+            <!-- Actions button -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="8dp">
 
-        <Button
-            android:id="@+id/remove_btn"
-            android:layout_width="100dp"
-            android:layout_height="73dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="8dp"
-            android:text="Remove Page"
-           android:gravity="center"/>
+                <ImageView
+                    android:id="@+id/crop_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/crop_icon" /> <!-- Replace with your action icon -->
 
-        <Button
-            android:id="@+id/reorder_btn"
-            android:layout_width="100dp"
-            android:layout_height="73dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="8dp"
-            android:text="Reorder Page" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Crop"
+                    android:textSize="12sp"
+                    android:textColor="?attr/colorOnSurface" />
+            </LinearLayout>
 
+            <!-- Files button -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="8dp">
 
+                <ImageView
+                    android:id="@+id/remove_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/delete_icon" /> <!-- Replace with your files icon -->
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Delete Page"
+                    android:textSize="12sp"
+                    android:textColor="?attr/colorOnSurface" />
+            </LinearLayout>
+
+            <!-- Settings button -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="8dp">
+
+                <ImageView
+                    android:id="@+id/reorder_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/reoder_icon" /> <!-- Replace with your settings icon -->
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Re-Order"
+                    android:textSize="12sp"
+                    android:textColor="?attr/colorOnSurface" />
+            </LinearLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 

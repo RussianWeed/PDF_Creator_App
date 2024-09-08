@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">pdf_V3</string>
+    <string name="hint">Name</string>
 </resources>

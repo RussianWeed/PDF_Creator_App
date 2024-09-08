@@ -9,8 +9,10 @@ import android.graphics.YuvImage;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -46,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> capturedImagePaths = new ArrayList<>();
     private PreviewView previewView;
 
+    private ImageView lastImage_btn;
+    private TextView picture_number;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,14 +57,16 @@ public class MainActivity extends AppCompatActivity {
 
         previewView = findViewById(R.id.previewView);
         ImageView captureButton = findViewById(R.id.captureButton);
-        Button viewImagesButton = findViewById(R.id.viewImagesButton);
+        lastImage_btn = findViewById(R.id.lastImage_btn);
+        picture_number =findViewById(R.id.picture_num);
+
 
         requestCameraPermission();
         startCamera();
 
         captureButton.setOnClickListener(v -> captureImage());
 
-        viewImagesButton.setOnClickListener(v -> {
+        lastImage_btn.setOnClickListener(v -> {
             if (!capturedImagePaths.isEmpty()) {
                 Intent intent = new Intent(MainActivity.this, ImageDisplayActivity.class);
                 intent.putStringArrayListExtra("imagePaths", new ArrayList<>(capturedImagePaths));
@@ -134,6 +140,8 @@ public class MainActivity extends AppCompatActivity {
                         String imagePath = saveBitmap(bitmap, "captured_image_" + System.currentTimeMillis()); // Save image with timestamp
                         if (imagePath != null) {
                             capturedImagePaths.add(imagePath); // Add the file path to the list
+                            lastImage_btn.setImageBitmap(bitmap);// Update the small ImageView with the last captured image
+                            picture_number.setText(""+capturedImagePaths.size());
                             Toast.makeText(MainActivity.this, "Image Captured", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(MainActivity.this, "Error Saving Image", Toast.LENGTH_SHORT).show();

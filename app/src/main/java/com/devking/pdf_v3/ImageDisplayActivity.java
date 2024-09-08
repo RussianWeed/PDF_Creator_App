@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,8 +30,8 @@ public class ImageDisplayActivity extends AppCompatActivity {
     private List<Bitmap> bitmapList = new ArrayList<>();
     private ImagePagerAdapter adapter;
 
-    private Button removePageButton;
-    private Button reorderButton;
+    private ImageView removePageButton;
+    private ImageView reorderButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +39,7 @@ public class ImageDisplayActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image_display);
 
         Button createPdfButton = findViewById(R.id.btn_create_pdf);
-        Button cropButton = findViewById(R.id.btn_crop);
+        ImageView cropButton = findViewById(R.id.crop_btn);
         pdfNameEditText = findViewById(R.id.pdf_name);
         viewPager = findViewById(R.id.viewPager);
 
@@ -171,3 +173,4 @@ public class ImageDisplayActivity extends AppCompatActivity {
         }
     }
 }
+
