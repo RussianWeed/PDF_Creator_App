@@ -8,15 +8,12 @@ android {
 
     defaultConfig {
         applicationId = "com.devking.pdf_v3"
-        minSdk = 34
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        renderscriptTargetApi = 30
-        renderscriptSupportModeEnabled = true
     }
 
     buildTypes {
@@ -28,6 +25,7 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -35,7 +33,6 @@ android {
 }
 
 dependencies {
-
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
@@ -44,16 +41,16 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
 
-    implementation ("com.itextpdf:itextpdf:5.5.13.2")
+    implementation("com.itextpdf:itextpdf:5.5.13.2")
 
-    // CameraX Libraries
-    implementation ("androidx.camera:camera-core:1.2.0-alpha01")
-    implementation ("androidx.camera:camera-camera2:1.2.0-alpha01")
-    implementation ("androidx.camera:camera-lifecycle:1.2.0-alpha01")
-    implementation ("androidx.camera:camera-view:1.0.0-alpha27")
+    // CameraX Libraries - Updated to stable versions
+    implementation("androidx.camera:camera-core:1.2.0")
+    implementation("androidx.camera:camera-camera2:1.2.0")
+    implementation("androidx.camera:camera-lifecycle:1.2.0")
+    implementation("androidx.camera:camera-view:1.2.0")
 
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
 
-    implementation ("com.github.bumptech.glide:glide:4.15.1")
-    annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
-
+    implementation("com.github.Yalantis:uCrop:2.2.8")
 }

@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -28,7 +29,15 @@
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="600dp"
         android:orientation="horizontal" />
+
+    <Button
+        android:id="@+id/btn_crop"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:text="Crop"
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp"/>
 
 </LinearLayout>
