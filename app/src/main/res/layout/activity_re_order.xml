@@ -26,11 +26,18 @@
             android:id="@+id/button_done"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_margin="16dp"
             android:text="Done"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:padding="12dp"
+            android:background="@drawable/button_background"
+            android:elevation="4dp"
+            android:layout_gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="0dp" />
+            app:layout_constraintBottom_toBottomOf="parent" />
+
 
     </LinearLayout>
 

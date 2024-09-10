@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/white">
 
 
     <LinearLayout
@@ -13,28 +14,44 @@
         android:orientation="horizontal"
         android:paddingBottom="16dp">
 
+        <!-- TextInputLayout for Name Input -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/filledTextField"
             android:layout_width="290dp"
             android:layout_height="wrap_content"
-            android:hint="@string/hint">
+            android:hint="Name"
+            app:boxBackgroundMode="filled"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxBackgroundColor="@color/white">
 
+            <!-- TextInputEditText for Input Field -->
             <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:id="@+id/pdf_name"
-                />
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:textColor="@color/black"
+                android:padding="10dp"
+                android:inputType="textPersonName"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Save Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_create_pdf"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="Save"
+            android:textColor="@android:color/white"
+            android:backgroundTint="#789BB4"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="12dp"
             app:iconGravity="textStart" />
     </LinearLayout>
+
 
     <!-- ViewPager to display images -->
     <androidx.viewpager2.widget.ViewPager2
@@ -58,7 +75,7 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingTop="16dp"
-            android:background="?attr/colorSurface">
+            android:background="@color/white">
 
             <!-- Actions button -->
             <LinearLayout
@@ -67,10 +84,10 @@
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:padding="8dp">
+                android:padding="8dp"
+                android:id="@+id/crop_btn">
 
                 <ImageView
-                    android:id="@+id/crop_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/crop_icon" /> <!-- Replace with your action icon -->
@@ -90,10 +107,10 @@
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:padding="8dp">
+                android:padding="8dp"
+                android:id="@+id/remove_btn">
 
                 <ImageView
-                    android:id="@+id/remove_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/delete_icon" /> <!-- Replace with your files icon -->
@@ -113,10 +130,10 @@
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:padding="8dp">
+                android:padding="8dp"
+                android:id="@+id/reorder_btn">
 
                 <ImageView
-                    android:id="@+id/reorder_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/reoder_icon" /> <!-- Replace with your settings icon -->

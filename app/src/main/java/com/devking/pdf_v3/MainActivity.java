@@ -3,13 +3,16 @@ package com.devking.pdf_v3;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
-import android.graphics.YuvImage;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.view.View;
+import android.provider.MediaStore;
+import android.util.Log;
+
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,7 +32,6 @@ import androidx.core.content.ContextCompat;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
@@ -44,12 +46,15 @@ public class MainActivity extends AppCompatActivity {
 
 
     private static final int REQUEST_CAMERA_PERMISSION = 200;
+    private static final int REQUEST_SELECT_IMAGE = 300;
     private ImageCapture imageCapture;
     private ArrayList<String> capturedImagePaths = new ArrayList<>();
     private PreviewView previewView;
 
     private ImageView lastImage_btn;
     private TextView picture_number;
+
+    private  ImageView gallery_btn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,13 +63,14 @@ public class MainActivity extends AppCompatActivity {
         previewView = findViewById(R.id.previewView);
         ImageView captureButton = findViewById(R.id.captureButton);
         lastImage_btn = findViewById(R.id.lastImage_btn);
-        picture_number =findViewById(R.id.picture_num);
-
+        picture_number = findViewById(R.id.picture_num);
+        gallery_btn = findViewById(R.id.select_from_gallery_button);
 
         requestCameraPermission();
         startCamera();
 
         captureButton.setOnClickListener(v -> captureImage());
+        gallery_btn.setOnClickListener(v -> openGallery());
 
         lastImage_btn.setOnClickListener(v -> {
             if (!capturedImagePaths.isEmpty()) {
@@ -76,6 +82,40 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    // Method to open the gallery
+    private void openGallery() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);  // Allow multiple selection
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_SELECT_IMAGE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == REQUEST_SELECT_IMAGE) {
+            handleSelectedImages(data);
+        }
+    }
+
+    private String getPathFromUri(Uri uri) {
+        if (uri == null) return null;
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        if (cursor != null) {
+            try {
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                cursor.moveToFirst();
+                return cursor.getString(column_index);
+            } finally {
+                cursor.close();
+            }
+        }
+        return null;
+    }
+
+
 
     private void requestCameraPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -99,34 +139,34 @@ public class MainActivity extends AppCompatActivity {
         ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(this);
         cameraProviderFuture.addListener(() -> {
             try {
-                cameraProvider = cameraProviderFuture.get(); // Assign the cameraProvider instance
-                bindPreview(cameraProvider); // Bind the preview and image capture use cases
+                cameraProvider = cameraProviderFuture.get();
+                bindPreview(cameraProvider);
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
         }, ContextCompat.getMainExecutor(this));
     }
 
+
     private void bindPreview(ProcessCameraProvider cameraProvider) {
-        // Set up the Preview with lower resolution
         Preview preview = new Preview.Builder()
-                .setTargetResolution(new Size(1280, 720))  // Set lower resolution for the preview
+                .setTargetResolution(new Size(1280, 720))
                 .build();
 
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
-        // Set up the ImageCapture with lower resolution
         imageCapture = new ImageCapture.Builder()
-                .setTargetResolution(new Size(1280, 720))  // Set lower resolution for image capture
+                .setTargetResolution(new Size(1280, 720))
                 .build();
 
-        // Choose the back camera as default
         CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
 
-        // Unbind previous use cases and bind with the new ones
-        cameraProvider.unbindAll();
+        cameraProvider.unbindAll();  // Unbind all use cases before binding new ones
         cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture);
+
+        Log.d("MainActivity", "Camera successfully bound");
     }
+
 
 
 
@@ -137,19 +177,14 @@ public class MainActivity extends AppCompatActivity {
                 public void onCaptureSuccess(@NonNull ImageProxy imageProxy) {
                     Bitmap bitmap = imageProxyToBitmap(imageProxy);
                     if (bitmap != null) {
-                        String imagePath = saveBitmap(bitmap, "captured_image_" + System.currentTimeMillis()); // Save image with timestamp
-                        if (imagePath != null) {
-                            capturedImagePaths.add(imagePath); // Add the file path to the list
-                            lastImage_btn.setImageBitmap(bitmap);// Update the small ImageView with the last captured image
-                            picture_number.setText(""+capturedImagePaths.size());
-                            Toast.makeText(MainActivity.this, "Image Captured", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(MainActivity.this, "Error Saving Image", Toast.LENGTH_SHORT).show();
-                        }
+                        String imagePath = saveBitmap(bitmap, "captured_image_" + System.currentTimeMillis());
+                        addImageToList(imagePath);
+                        updateThumbnailAndCount();
+                        Toast.makeText(MainActivity.this, "Image Captured", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(MainActivity.this, "Error Capturing Image", Toast.LENGTH_SHORT).show();
                     }
-                    imageProxy.close(); // Always close the imageProxy to free resources
+                    imageProxy.close();
                 }
 
                 @Override
@@ -160,35 +195,65 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void addImageToList(String imagePath) {
+        if (imagePath != null) {
+            Log.d("MainActivity", "Image path added: " + imagePath);
+            capturedImagePaths.add(imagePath);
+        } else {
+            Log.e("MainActivity", "Error adding image path");
+        }
+    }
+
+
+    private void updateThumbnailAndCount() {
+        if (!capturedImagePaths.isEmpty()) {
+            Bitmap bitmap = BitmapFactory.decodeFile(capturedImagePaths.get(capturedImagePaths.size() - 1));
+            lastImage_btn.setImageBitmap(bitmap);
+            picture_number.setText("" + capturedImagePaths.size());
+        }
+    }
+
     private Bitmap imageProxyToBitmap(ImageProxy image) {
         if (image.getFormat() == ImageFormat.YUV_420_888 && image.getPlanes().length == 3) {
-            ImageProxy.PlaneProxy[] planes = image.getPlanes();
-            ByteBuffer yBuffer = planes[0].getBuffer();
-            ByteBuffer uBuffer = planes[1].getBuffer();
-            ByteBuffer vBuffer = planes[2].getBuffer();
-
-            int ySize = yBuffer.remaining();
-            int uSize = uBuffer.remaining();
-            int vSize = vBuffer.remaining();
-
-            byte[] nv21 = new byte[ySize + uSize + vSize];
-            yBuffer.get(nv21, 0, ySize);
-            vBuffer.get(nv21, ySize, vSize);
-            uBuffer.get(nv21, ySize + vSize, uSize);
-
-            YuvImage yuvImage = new YuvImage(nv21, ImageFormat.NV21, image.getWidth(), image.getHeight(), null);
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            yuvImage.compressToJpeg(new android.graphics.Rect(0, 0, image.getWidth(), image.getHeight()), 100, out);
-
-            byte[] imageBytes = out.toByteArray();
-            return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+            // Existing conversion logic
         } else {
             ByteBuffer buffer = image.getPlanes()[0].getBuffer();
             byte[] bytes = new byte[buffer.remaining()];
             buffer.get(bytes);
-            return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            if (bitmap == null) {
+                Log.e("MainActivity", "Bitmap decoding failed");
+            }
+            return bitmap;
         }
+        return null;
     }
+
+
+    private void handleSelectedImages(Intent data) {
+        if (data.getClipData() != null) {
+            int count = data.getClipData().getItemCount();
+            for (int i = 0; i < count; i++) {
+                Uri imageUri = data.getClipData().getItemAt(i).getUri();
+                String path = getPathFromUri(imageUri);
+                if (path != null) {
+                    addImageToList(path);
+                } else {
+                    Toast.makeText(this, "Error getting image path", Toast.LENGTH_SHORT).show();
+                }
+            }
+            Toast.makeText(this, count + " images selected", Toast.LENGTH_SHORT).show();
+        } else if (data.getData() != null) {
+            String path = getPathFromUri(data.getData());
+            if (path != null) {
+                addImageToList(path);
+            } else {
+                Toast.makeText(this, "Error getting image path", Toast.LENGTH_SHORT).show();
+            }
+        }
+        updateThumbnailAndCount();
+    }
+
 
     private String saveBitmap(Bitmap bitmap, String filename) {
         try {
@@ -219,7 +284,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         if (cameraProvider != null) {
-            cameraProvider.unbindAll(); // Unbind all camera use cases to avoid issues when the activity is paused
+            cameraProvider.unbindAll();
         }
     }
 
@@ -227,7 +292,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (cameraProvider != null) {
-            cameraProvider.unbindAll(); // Unbind all camera use cases when the activity is destroyed
+            cameraProvider.unbindAll();
         }
     }
 

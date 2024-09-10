@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,8 +31,8 @@ public class ImageDisplayActivity extends AppCompatActivity {
     private List<Bitmap> bitmapList = new ArrayList<>();
     private ImagePagerAdapter adapter;
 
-    private ImageView removePageButton;
-    private ImageView reorderButton;
+    private LinearLayout removePageButton;
+    private LinearLayout reorderButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,7 @@ public class ImageDisplayActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image_display);
 
         Button createPdfButton = findViewById(R.id.btn_create_pdf);
-        ImageView cropButton = findViewById(R.id.crop_btn);
+        LinearLayout cropButton = findViewById(R.id.crop_btn);
         pdfNameEditText = findViewById(R.id.pdf_name);
         viewPager = findViewById(R.id.viewPager);
 
@@ -164,6 +165,14 @@ public class ImageDisplayActivity extends AppCompatActivity {
                 PDFcreator pdfCreator = new PDFcreator();
                 pdfCreator.createPDF(this, bitmapList, pdfName);
                 Toast.makeText(this, "PDF created successfully", Toast.LENGTH_SHORT).show();
+
+                // After successful PDF creation, go back to MainActivity
+                Intent intent = new Intent(ImageDisplayActivity.this, MainActivity.class);
+                // Clear the activity stack and start a new MainActivity instance
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish(); // Close the current activity to prevent returning to it
+
             } catch (Exception e) {
                 Log.e(TAG, "Error creating PDF: " + e.getMessage());
                 Toast.makeText(this, "Failed to create PDF", Toast.LENGTH_SHORT).show();

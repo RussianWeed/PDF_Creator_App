@@ -26,19 +26,19 @@
     <!-- Capture Button (Transparent) inside PreviewView -->
     <ImageView
         android:id="@+id/captureButton"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:background="@android:color/transparent"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:background="@drawable/camera_button_style"
         android:contentDescription="Capture Image"
-        android:padding="8dp"
+        android:padding="0dp"
         android:scaleType="centerInside"
         android:src="@drawable/baseline_camera_24"
-        android:alpha="20"
         app:layout_constraintBottom_toBottomOf="@id/previewView"
         app:layout_constraintEnd_toEndOf="@id/previewView"
         app:layout_constraintStart_toStartOf="@id/previewView"
         app:layout_constraintTop_toTopOf="@id/previewView"
         app:layout_constraintVertical_bias="0.95" />
+
 
     <!-- ImageView to display the last captured image with white border -->
     <ImageView
@@ -66,5 +66,17 @@
         app:layout_constraintBottom_toTopOf="@+id/lastImage_btn"
         app:layout_constraintEnd_toEndOf="@+id/lastImage_btn"
         app:layout_constraintTop_toTopOf="@+id/lastImage_btn"/>
+
+
+    <ImageView
+        android:id="@+id/select_from_gallery_button"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/gallery_icon"
+        android:text="Select from Gallery"
+        app:layout_constraintBottom_toBottomOf="@+id/captureButton"
+        app:layout_constraintEnd_toStartOf="@+id/captureButton"
+        app:layout_constraintStart_toStartOf="@+id/previewView" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
