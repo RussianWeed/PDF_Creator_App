@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">pdf_V3</string>
+    <string name="app_name">PDF_generator</string>
     <string name="hint">Name</string>
 </resources>
