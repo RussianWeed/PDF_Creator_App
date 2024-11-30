@@ -33,15 +33,14 @@ Watch the full app demonstration:
 
   https://github.com/user-attachments/assets/1c478f0b-1812-41d0-bf8c-502aa3c6e770
 
-
 ---
 
 
 
 ### 💻 **Technologies Used**  
-- **Frontend**: [Specify Framework, e.g., Flutter/Dart, Android Studio]  
-- **Backend**: [e.g., Firebase, SQLite]  
-- **Tools**: [e.g., Figma for UI Design]  
+- **Frontend**: [XML]  
+- **Backend**: [Java]  
+- **Tools**: [Android Studios]  
 
 ---
 
@@ -59,7 +58,7 @@ We welcome contributions to improve the app! Here's how you can help:
 Feel free to reach out with feedback or suggestions:  
 - **Author**: Kalpak  
 - **Email**: (popking0701@gmail.com)
-- **LinkedIn**: (https://www.linkedin.com/in/kalpaklahiri/)(#)  
+- **LinkedIn**: (https://www.linkedin.com/in/kalpaklahiri/)
 
 ---
 
